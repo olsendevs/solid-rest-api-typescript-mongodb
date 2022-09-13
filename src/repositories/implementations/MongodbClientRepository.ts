@@ -13,7 +13,6 @@ export class MongodbUserRepository implements IClientRepository{
     }
 
     async save(user: Client): Promise<void> {
-        console.log(user);
         await collections.client.insertOne(user);
     }
 
