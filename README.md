@@ -44,5 +44,31 @@ Seguem referencias para criação do modelo:
 
 ```
 
-3.
+3. Criando a estrutura de pastas e arquivos iniciais da API:
+```
+- entities/
+- models/
+- providers/
+- repositories/
+- routes/
+- services/
+- useCases/
+- app.ts
+- server.ts
+```
+
+4. Inicie a programação do seu app.ts iniciando o express e inicando o router.ts :
+```
+import express from 'express';
+import { router } from './routes';
+
+const app = express();
+
+app.use(express.json());
+
+export { app }
+
+```
+
+5. Inicie a programação do seu router.ts, nesse arquivo você deve instanciar suas rotas iniciais do projeto
  
