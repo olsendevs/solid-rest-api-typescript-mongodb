@@ -5,5 +5,8 @@ Seguem referencias para criação do modelo:
 - SOLID (O básico para você programar melhor) (https://www.youtube.com/watch?v=mkx0CdWiPRA)
 - Como usar o TypeScript com o MongoDB Atlas (https://www.mongodb.com/compatibility/using-typescript-with-mongodb-tutorial)
 
+## Iniciando o projeto
 
+Para iniciar seu ambiente use os seguintes comandos:
+´´´ yarn init -y ´´´
  
