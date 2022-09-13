@@ -140,7 +140,7 @@ export async function connectToDatabase () {
 
 ```
 
-7. Agora criaremos nosso CRUD para cada funcionalidade da API, segue abaixo a estrutura de arquivos que deve ser criada dentro da pasta ``useCases`` para cada função da dentro do projeto, a seguir veja um exemplo de um POST:
+7. Agora criaremos nosso CRUD para cada funcionalidade da API, segue abaixo a estrutura de arquivos que deve ser criada dentro da pasta ``useCases`` para cada função dentro do projeto, a seguir veja um exemplo de um POST:
 
 ```
 - CreateClient/
@@ -160,7 +160,7 @@ export interface ICreateClientRequestDTO {
 }
 ```
 
-9. No controler ``CreateClientController`` você criar um método ``handle`` com a implementação da funcionalidade que será criada no arquivo ``UseCase`` baseada nas resposta enviada no corpo da requisição, é aqui que você envia as respostas e os erros:
+9. No controlLer ``CreateClientController`` você criar um método ``handle`` com a implementação da funcionalidade que será criada no arquivo ``UseCase`` baseada nas resposta enviada no corpo da requisição, é aqui que você envia as respostas e os erros:
 
 ```
 import { Request, Response } from "express";
@@ -192,17 +192,15 @@ export class CreateClientController {
 
 ```
 
-10. No seu UseCase ``CreateClientUseCase`` você deve inserir um método com a lógica por trás dessa chamada, a classe deve chamar e instanciar as interfaces, veja o exemplo a seguir onde verificamos se o e-mail já existe, salvamos no banco caso não exista e enviamos um e-mail:
+10. No seu UseCase ``CreateClientUseCase`` você deve inserir um método com a lógica por trás dessa chamada, a classe deve chamar e instanciar as interfaces, veja o exemplo a seguir onde verificamos se o e-mail já existe, salvamos no banco caso não exista:
 ```
 import Client  from "../../entities/Client";
-import { IMailProvider } from "../../providers/IMailProvider";
 import { IClientRepository } from "../../repositories/IUsersRepository";
 import { ICreateClientRequestDTO } from "./CreateClientDTO";
 
 export class CreateClientUseCase {
     constructor(
-        private clientsRepository: IClientRepository,
-        private mailProvider: IMailProvider,
+        private clientsRepository: IClientRepository
     ) {}
     
     async execute(data: ICreateClientRequestDTO): Promise<Client> {
