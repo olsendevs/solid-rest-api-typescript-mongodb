@@ -19,7 +19,7 @@ export async function connectToDatabase () {
         "validator": {
             $jsonSchema: {
                 bsonType: "object",
-                required: ["name", "price", "category"],
+                required: ["name", "email"],
                 additionalProperties: false,
                 properties: {
                 _id: {},
