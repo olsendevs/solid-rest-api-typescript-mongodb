@@ -56,6 +56,7 @@ Seguem referencias para criação do modelo:
 - services/
 - useCases/
 - app.ts
+- routes.ts
 - server.ts
 - .env
 ```
@@ -73,7 +74,7 @@ CLIENT_COLLECTION_NAME="client"
 ```
 import { ObjectId } from "mongodb";
 
-export class User {
+export class Client {
     public readonly _id: ObjectId;
 
     public name: string;
