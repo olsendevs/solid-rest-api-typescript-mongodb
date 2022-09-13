@@ -74,16 +74,16 @@ CLIENT_COLLECTION_NAME="client"
 import { ObjectId } from "mongodb";
 
 export class User {
-    public readonly id: ObjectId;
+    public readonly _id: ObjectId;
 
     public name: string;
     public email: string;
 
-    constructor(props: Omit<User, 'id'>, id?: string){
+    constructor(props: Omit<User, '_id'>, _id?: string){
         Object.assign(this, props);
 
-        if(!id) {
-            this.id = new ObjectId();
+        if(!_id) {
+            this._id = new ObjectId();
         }
     }
 }
