@@ -2,10 +2,10 @@ import { MongodbUserRepository } from "../../repositories/implementations/Mongod
 import { CreateClientController } from "./CreateClientController";
 import { CreateClientUseCase } from "./CreateClientUseCase";
 
-const postgressUserRepository = new MongodbUserRepository();
+const mongodbUserRepository = new MongodbUserRepository();
 
 const createClientUseCase = new CreateClientUseCase(
-    postgressUserRepository
+    mongodbUserRepository
 );
 
 const createClientController = new CreateClientController(

@@ -9,7 +9,7 @@ export class CreateClientController {
         const { name, email } = request.body;
 
         try{
-            var result = await this.createUserUseCase.execute({
+            const result = await this.createUserUseCase.execute({
                 name,
                 email
             });
