@@ -55,8 +55,8 @@ Seguem referencias para criação do modelo:
 - repositories/
 - services/
 - useCases/
+- routes/
 - app.ts
-- routes.ts
 - server.ts
 - .env
 ```
@@ -300,7 +300,6 @@ export { createUserUseCase, createUserController  }
 
 ```
 import express from 'express';
-import { router } from './routes';
 
 const app = express();
 
@@ -310,19 +309,20 @@ export { app }
 
 ```
 
-15. Agora você deve definir suas rotas no arquivo ``routes.ts``:
+15. Agora você deve definir as rotas do seu objeto no arquivo ``clients.routes.ts``:
 ```
-import { Router } from "express";
-import { createClientController } from "./useCases/CreateClient";
+import express, { Request, Response } from "express";
+import { createClientController } from "../useCases/CreateClient";
+import { deleteClientController } from "../useCases/DeleteClient";
 
-const router = Router();
+export const clientsRouter = express.Router();
 
-router.post('/client', (request, response) => {
+clientsRouter.use(express.json());
+
+clientsRouter.post('/', (request, response) => {
     return createClientController.handle(request, response);
 });
 
-
-export { router }
 
 ```
 
@@ -331,11 +331,11 @@ export { router }
 import express from "express";
 import { connectToDatabase } from "./services/database.service"
 import { app } from './app';
-import { router } from "./routes";
+import { clientsRouter } from "./routes/clients.routes";
 
 connectToDatabase()
     .then(() => {
-        app.use(router);
+        app.use("/clients", clientsRouter);
 
         app.listen(3333, () => {
             console.log(`Server started at http://localhost:3333`);
