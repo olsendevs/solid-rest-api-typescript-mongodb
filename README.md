@@ -4,6 +4,7 @@ Seguem referencias para criação do modelo:
 - MVP de micro-serviço com TypeScript, Mongo e TDD (https://www.youtube.com/watch?v=f9zdYWnuPzc)
 - SOLID (O básico para você programar melhor) (https://www.youtube.com/watch?v=mkx0CdWiPRA)
 - Como usar o TypeScript com o MongoDB Atlas (https://www.mongodb.com/compatibility/using-typescript-with-mongodb-tutorial)
+- Jest Documentation Using TypeScript (https://jestjs.io/docs/getting-started#using-typescript)
 
 ## Iniciando o projeto
 
@@ -24,6 +25,14 @@ Seguem referencias para criação do modelo:
 ``yarn add mongodb`` (Para adicionar o mongodb ao projeto)
 
 ``yarn add dotenv`` (Para adicionar a biblioteca dotenv que serve para esconder dados secretos como senhas)
+
+``yarn add jest -D`` (Para adiciona o Jest, biblioteca de testes js)
+
+``yarn add @babel/preset-typescript -D`` (Para adicionar as configurações do Jest para o typescript)
+
+``yarn add --dev @babel/preset-env`` (Para adicionar a configuração necessaria parar o Jest)
+
+
 
 2. Configure seu arquivo tsconfig.json conforme a necessidade do projeto, segue abaixo o exemplo básico:
 ```
@@ -46,6 +55,16 @@ Seguem referencias para criação do modelo:
     "src/**/*.ts"]
 }
 
+```
+
+Crie um arquivo chamado ``babel.config.js`` que será utilizado para configurar a conversão dos testes para o typescript, para isso siga o modelo abaixo:
+```
+module.exports = {
+    presets: [
+      ['@babel/preset-env', {targets: {node: 'current'}}],
+      '@babel/preset-typescript',
+    ],
+  };
 ```
 
 3. Criando a estrutura de pastas e arquivos iniciais da API, crie uma pasta chamada ``src/`` e dentro dela a seguinte estrutura:
@@ -346,5 +365,7 @@ connectToDatabase()
         process.exit();
     });
 ```
+
+
 
 Com isso você pode criar um projeto com qualquer funcionalidade dentro da métodologia SOLID. O restante das chamadas está no projeto.
