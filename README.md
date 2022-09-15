@@ -4,7 +4,8 @@ Seguem referencias para criação do modelo:
 - MVP de micro-serviço com TypeScript, Mongo e TDD (https://www.youtube.com/watch?v=f9zdYWnuPzc)
 - SOLID (O básico para você programar melhor) (https://www.youtube.com/watch?v=mkx0CdWiPRA)
 - Como usar o TypeScript com o MongoDB Atlas (https://www.mongodb.com/compatibility/using-typescript-with-mongodb-tutorial)
-- Jest Documentation Using TypeScript (https://jestjs.io/docs/getting-started#using-typescript)
+- Jest Documentation using TypeScript (https://jestjs.io/docs/getting-started#using-typescript)
+- Jest Documentation using MongoDB (https://jestjs.io/docs/mongodb)
 
 ## Iniciando o projeto
 
@@ -32,7 +33,7 @@ Seguem referencias para criação do modelo:
 
 ``yarn add --dev @babel/preset-env`` (Para adicionar a configuração necessaria parar o Jest)
 
-
+``yarn add --dev @shelf/jest-mongodb`` (Para adicionar a biblioteca do Jest para MongoDB)
 
 2. Configure seu arquivo tsconfig.json conforme a necessidade do projeto, segue abaixo o exemplo básico:
 ```
