@@ -60,7 +60,7 @@ Seguem referencias para criação do modelo:
 
 ```
 
-Seguem scripts que devem ficar no seu arquito ``package.json`` para rodar o projeto:
+Seguem scripts que devem ficar no seu arquivo ``package.json`` para rodar o projeto:
 ```
   "scripts": {
     "test": "jest",
