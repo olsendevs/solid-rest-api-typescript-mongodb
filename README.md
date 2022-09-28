@@ -45,6 +45,8 @@ Seguem referencias para criação do modelo:
     "module": "commonjs",     
     
     "allowJs": true,
+    
+    "outDir": "dist",
  
     "esModuleInterop": true,                          
     
@@ -56,6 +58,16 @@ Seguem referencias para criação do modelo:
     "src/**/*.ts"]
 }
 
+```
+
+Seguem scripts que devem ficar no seu arquito ``package.json`` para rodar o projeto:
+```
+  "scripts": {
+    "test": "jest",
+    "dev": "tsnd --transpile-only --respawn --ignore-watch node_modules src/server.ts",
+    "start": "npm run build && node dist/server.js",
+    "build": "tsc"
+  },
 ```
 
 Crie um arquivo chamado ``babel.config.js`` que será utilizado para configurar a conversão dos testes para o typescript, para isso siga o modelo abaixo:
