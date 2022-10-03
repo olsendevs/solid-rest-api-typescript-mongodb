@@ -172,6 +172,32 @@ export async function connectToDatabase () {
 
 
 ```
+Outro exemplo sem validação de campos:
+```
+import * as mongoDB from "mongodb";
+import * as dotenv from "dotenv";
+
+export const collections: { classification?: mongoDB.Collection } = {}
+
+export async function connectToDatabase () {
+    dotenv.config();
+ 
+    const client: mongoDB.MongoClient = new mongoDB.MongoClient(process.env.DB_CONN_STRING);
+            
+    await client.connect();
+        
+    const db: mongoDB.Db = client.db(process.env.DB_NAME);
+   
+    const classificationCollection: mongoDB.Collection = db.collection(process.env.COLLECTION_NAME);
+ 
+    collections.classification = classificationCollection;
+       
+         console.log(`Successfully connected to database: ${db.databaseName} and collection: ${classificationCollection.collectionName}`);
+ }
+
+
+```
+
 
 7. Agora criaremos nosso CRUD para cada funcionalidade da API, segue abaixo a estrutura de arquivos que deve ser criada dentro da pasta ``useCases`` para cada função dentro do projeto, a seguir veja um exemplo de um POST:
 
