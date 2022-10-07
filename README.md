@@ -13,7 +13,7 @@ Seguem referencias para criação do modelo:
 
 ``yarn init -y ``  (Para criar a package.json com as configurações básicas)
 
-``yarn add ts-node-dev``   (Para inserir a biblioteca de modo desenvolvimento do ts)
+``yarn add ts-node-dev -D``   (Para inserir a biblioteca de modo desenvolvimento do ts)
 
 ``yarn add typescript --ts-node-dev``  (para inserir o typescript no modo dev)
 
@@ -27,6 +27,10 @@ Seguem referencias para criação do modelo:
 
 ``yarn add dotenv`` (Para adicionar a biblioteca dotenv que serve para esconder dados secretos como senhas)
 
+``yarn add cors`` (Para adicionar a biblioteca CORS)
+
+``yarn add express-async-errors`` (Para inserir o sistema de middleware de erros do express)
+
 ``yarn add jest -D`` (Para adiciona o Jest, biblioteca de testes js)
 
 ``yarn add @babel/preset-typescript -D`` (Para adicionar as configurações do Jest para o typescript)
@@ -38,24 +42,27 @@ Seguem referencias para criação do modelo:
 2. Configure seu arquivo tsconfig.json conforme a necessidade do projeto, segue abaixo o exemplo básico:
 ```
 {
-  "compilerOptions": {
-
-    "target": "ES2021",                               
-
-    "module": "commonjs",     
-    
-    "allowJs": true,
-    
-    "outDir": "dist",
- 
-    "esModuleInterop": true,                          
-    
-    "forceConsistentCasingInFileNames": true,         
-                             
-    "skipLibCheck": true                              
-  },
-  "include": [
-    "src/**/*.ts"]
+	"compilerOptions": {
+		"target": "es2018",
+		"lib": ["es5", "es6", "ES2018"],
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"allowJs": true,
+		"outDir": "./dist",
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"noImplicitAny": true,
+		"strictPropertyInitialization": false
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "dist"],
+	"ts-node": {
+		"files": true
+	}
 }
 
 ```
@@ -83,6 +90,8 @@ module.exports = {
 3. Criando a estrutura de pastas e arquivos iniciais da API, crie uma pasta chamada ``src/`` e dentro dela a seguinte estrutura:
 ```
 - entities/
+- middlewares/
+- helpers/
 - providers/
 - repositories/
 - services/
@@ -93,7 +102,56 @@ module.exports = {
 - .env
 ```
 
-4. Dentro do arquivo .env você deve inserir as informações sigilosas do seu projeto, como a connection string, segue um exemplo abaixo:
+4. O proximo passo é criar o seu sistema de gerenciamento de erros, para isso comece criando dentro da pasta ``helpers`` um arquivo chamado ``api-errors.ts``, siga o modelo abaixo ao cria-lo:
+```
+export class ApiError extends Error {
+	public readonly statusCode: number
+
+	constructor(message: string, statusCode: number) {
+		super(message)
+		this.statusCode = statusCode
+	}
+}
+
+export class BadRequestError extends ApiError {
+	constructor(message: string) {
+		super(message, 400)
+	}
+}
+
+export class NotFoundError extends ApiError {
+	constructor(message: string) {
+		super(message, 404)
+	}
+}
+
+export class UnauthorizedError extends ApiError {
+	constructor(message: string) {
+		super(message, 401)
+	}
+}
+```
+
+5. Agora você deve criar seus middlewares para gerenciamento de erros no projeto, dentro da pasta ``middlewares`` crie o arquivo ``error.ts``, segue o exemplo:
+```
+import { NextFunction, Request, Response } from 'express'
+import { ApiError } from '../helpers/api-errors'
+
+export const errorMiddleware = (
+	error: Error & Partial<ApiError>,
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	const statusCode = error.statusCode ?? 500
+	const message = error.statusCode ? error.message : 'Internal Server Error'
+	return res.status(statusCode).json({ message })
+}
+
+```
+
+
+6. Dentro do arquivo .env você deve inserir as informações sigilosas do seu projeto, como a connection string, segue um exemplo abaixo:
 
 ```
 DB_CONN_STRING="mongodb+srv://<username>:<password>@sandbox.jadwj.mongodb.net"
@@ -101,7 +159,7 @@ DB_NAME="solid-api"
 CLIENT_COLLECTION_NAME="client"
 ```
 
-5. Dentro da pasta ``entities/`` crie a entidade base para seu projeto e inicie as propriedades no seu construtor, segue um exemplo:
+7. Dentro da pasta ``entities/`` crie a entidade base para seu projeto e inicie as propriedades no seu construtor, segue um exemplo:
 
 ```
 import { ObjectId } from "mongodb";
@@ -123,7 +181,7 @@ export class Client {
 
 ```
 
-6. Dentro da pasta ``services/`` vamos criar nosso arquivo de configuração e conexão com o banco ``database.service.ts``, segue o exemplo abaixo:
+8. Dentro da pasta ``services/`` vamos criar nosso arquivo de configuração e conexão com o banco ``database.service.ts``, segue o exemplo abaixo:
 
 ```
 import * as mongoDB from "mongodb";
@@ -199,7 +257,7 @@ export async function connectToDatabase () {
 ```
 
 
-7. Agora criaremos nosso CRUD para cada funcionalidade da API, segue abaixo a estrutura de arquivos que deve ser criada dentro da pasta ``useCases`` para cada função dentro do projeto, a seguir veja um exemplo de um POST:
+9. Agora criaremos nosso CRUD para cada funcionalidade da API, segue abaixo a estrutura de arquivos que deve ser criada dentro da pasta ``useCases`` para cada função dentro do projeto, a seguir veja um exemplo de um POST:
 
 ```
 - CreateClient/
@@ -210,7 +268,7 @@ export async function connectToDatabase () {
   - index.js
 ```
 
-8. Dentro do seu arquivo DTO você deve criar uma interface para o request que será enviado nesse POST:
+10. Dentro do seu arquivo DTO você deve criar uma interface para o request que será enviado nesse POST:
  
 ```
 export interface ICreateClientRequestDTO {
@@ -219,7 +277,7 @@ export interface ICreateClientRequestDTO {
 }
 ```
 
-9. No controlLer ``CreateClientController`` você criar um método ``handle`` com a implementação da funcionalidade que será criada no arquivo ``UseCase`` baseada nas resposta enviada no corpo da requisição, é aqui que você envia as respostas e os erros:
+11. No controlLer ``CreateClientController`` você criar um método ``handle`` com a implementação da funcionalidade que será criada no arquivo ``UseCase`` baseada nas resposta enviada no corpo da requisição, é aqui que você envia as respostas e os erros:
 
 ```
 import { Request, Response } from "express";
@@ -231,27 +289,19 @@ export class CreateClientController {
     ){}
     async handle(request: Request, response: Response): Promise<Response> {
         const { name, email } = request.body;
+        var result = await this.createUserUseCase.execute({
+            name,
+            email,
+        });
+        
 
-        try{
-            var result = await this.createUserUseCase.execute({
-                name,
-                email,
-            });
-            
-
-            return response.status(201).send(result);
-        } catch (err) {
-            return response.status(400).json({
-                message: err.message || 'Unexpected error.'
-            })
-        }
-
+        return response.status(201).send(result);
     }
 }
 
 ```
 
-10. No seu UseCase ``CreateClientUseCase`` você deve inserir um método com a lógica por trás dessa chamada, a classe deve chamar e instanciar as interfaces, veja o exemplo a seguir onde verificamos se o e-mail já existe, salvamos no banco caso não exista:
+12. No seu UseCase ``CreateClientUseCase`` você deve inserir um método com a lógica por trás dessa chamada, a classe deve chamar e instanciar as interfaces, veja o exemplo a seguir onde verificamos se o e-mail já existe, salvamos no banco caso não exista:
 ```
 import Client  from "../../entities/Client";
 import { IClientRepository } from "../../repositories/IUsersRepository";
@@ -266,7 +316,7 @@ export class CreateClientUseCase {
         const userAlreadyExists = await this.clientsRepository.findByEmail(data.email);
 
         if(userAlreadyExists){
-            throw new Error('Client already exists.');
+            throw new BadRequestError('Client already exists.');
         }
         const user = new Client(data);
 
@@ -278,7 +328,7 @@ export class CreateClientUseCase {
 
 ```
 
-11. Em seguida criaremos as interfaces dos nossos ``repositories/`` e ``providers/``:
+13. Em seguida criaremos as interfaces dos nossos ``repositories/`` e ``providers/``:
 
 A pasta ``repositories`` guarda as classes que se comunicam com o banco de dados da aplicação, veja o exemplo a seguir no arquivo ``IClientRepository``:
 ```
@@ -297,7 +347,7 @@ export interface IUsersRepository {
 
 Cada pasta deve conter uma sub-pasta chamada ``implementation/`` que é o local onde as interfaces serão implementadas.
 
-12. Agora devemos criar a implementação dos nossos ``repositories/`` e ``providers/``, veja abaixo como criar um repositorio com MongoDB:
+14. Agora devemos criar a implementação dos nossos ``repositories/`` e ``providers/``, veja abaixo como criar um repositorio com MongoDB:
 
 Crie o arquivo ``MongodbClientRepository``:
 ```
@@ -333,7 +383,7 @@ export class MongodbUserRepository implements IClientRepository{
 }
 ```
 
-13. Agora você deve configurar seu ``index.js`` implementando os repositorios e provedores:
+15. Agora você deve configurar seu ``index.ts`` implementando os repositorios e provedores:
 ```
 import { MongodbUserRepository } from "../../repositories/implementations/MongodbClientRepository";
 import { CreateClientController } from "./CreateClientController";
@@ -354,7 +404,7 @@ export { createUserUseCase, createUserController  }
 ```
 
 
-14. Agora configure seu ``app.ts`` da seguinte forma:
+16. Agora configure seu ``app.ts`` da seguinte forma:
 
 ```
 import express from 'express';
@@ -367,7 +417,7 @@ export { app }
 
 ```
 
-15. Agora você deve definir as rotas do seu objeto no arquivo ``clients.routes.ts``:
+17. Agora você deve definir as rotas do seu objeto no arquivo ``clients.routes.ts``:
 ```
 import express, { Request, Response } from "express";
 import { createClientController } from "../useCases/CreateClient";
@@ -384,27 +434,37 @@ clientsRouter.post('/', (request, response) => {
 
 ```
 
-16. Em seguida configure seu ``server.ts`` da seguinte forma:
+18. Agora você deve criar o seu arquivo ``server.ts``, nele você deve adicionar o middleware de erro do seu projeto sempre antes do return, segue o modelo abaixo que pode ser utilizado como base:
 ```
-import express from "express";
+import 'express-async-errors'
 import { connectToDatabase } from "./services/database.service"
 import { app } from './app';
 import { clientsRouter } from "./routes/clients.routes";
+import cors from 'cors';
+import { errorMiddleware } from "./middlewares/error";
 
 connectToDatabase()
     .then(() => {
+
+        const options: cors.CorsOptions = {
+            methods: "GET, OPTIONS, PUT, POST, DELETE",
+            origin: "*"
+        };
+
+        app.use(cors(options));
+
         app.use("/clients", clientsRouter);
 
-        app.listen(3333, () => {
-            console.log(`Server started at http://localhost:3333`);
-        });
+        app.use(errorMiddleware);
+
+        return app.listen(3333);
     })
     .catch((error: Error) => {
         console.error("Database connection failed", error);
         process.exit();
     });
-```
 
+```
 
 
 Com isso você pode criar um projeto com qualquer funcionalidade dentro da métodologia SOLID. O restante das chamadas está no projeto.

@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import Client  from "../../entities/Client";
+import { NotFoundError } from "../../helpers/api-errors";
 import { IClientRepository } from "../../repositories/IClientRepository";
 
 export class ListClientByIdUseCase {
@@ -8,6 +9,11 @@ export class ListClientByIdUseCase {
     ) {}
     
     async execute(id: ObjectId): Promise<Client> {
-         return await this.clientsRepository.findById(id);
+        const client =  await this.clientsRepository.findById(id);
+        if(!client){
+            throw new NotFoundError('Not found any client with this ID.');
+        }
+
+        return client
     }
 }

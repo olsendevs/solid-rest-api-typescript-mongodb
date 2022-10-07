@@ -10,23 +10,17 @@ export class UpdateClientController {
         const id = new ObjectId(request?.params?.id);
         const { name, email } = request.body;
 
-        try{
-            const result = await this.UpdateUserUseCase.execute({
-                name,
-                email,
-                _id: id
-            });
-            
+        const result = await this.UpdateUserUseCase.execute({
+            name,
+            email,
+            _id: id
+        });
+        
 
-            result
-                ? response.status(200).send(result)
-                : response.status(304).send();
-    
-        } catch (err) {
-            return response.status(400).json({
-                message: err.message || 'Unexpected error.'
-            })
-        }
+        result
+            ? response.status(200).send(result)
+            : response.status(304).send();
 
+        return response;
     }
 }

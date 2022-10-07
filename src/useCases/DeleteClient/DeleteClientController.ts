@@ -9,15 +9,9 @@ export class DeleteClientController {
     async handle(request: Request, response: Response): Promise<Response> {
         const id = new ObjectID(request?.params?.id);
 
-        try{
-            await this.DeleteUserUseCase.execute(id);
+        await this.DeleteUserUseCase.execute(id);
             
-            return response.status(204).send();
-        } catch (err) {
-            return response.status(400).json({
-                message: err.message || 'Unexpected error.'
-            })
-        }
+        return response.status(204).send();
 
     }
 }
