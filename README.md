@@ -6,6 +6,7 @@ Seguem referencias para criação do modelo:
 - Como usar o TypeScript com o MongoDB Atlas (https://www.mongodb.com/compatibility/using-typescript-with-mongodb-tutorial)
 - Jest Documentation using TypeScript (https://jestjs.io/docs/getting-started#using-typescript)
 - Jest Documentation using MongoDB (https://jestjs.io/docs/mongodb)
+- Tratamento de erros no Express.js com TypeScript (https://www.youtube.com/watch?v=SnxAq9ktyuo)
 
 ## Iniciando o projeto
 
