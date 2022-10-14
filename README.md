@@ -44,27 +44,24 @@ Seguem referencias para criação do modelo:
 ```
 {
 	"compilerOptions": {
-		"target": "es2018",
-		"lib": ["es5", "es6", "ES2018"],
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
-		"module": "commonjs",
-		"moduleResolution": "node",
-		"resolveJsonModule": true,
-		"allowJs": true,
-		"outDir": "./dist",
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"strict": true,
-		"noImplicitAny": true,
-		"strictPropertyInitialization": false
+  
+	  "target": "ES2021",                               
+  
+	  "module": "commonjs",     
+	  
+	  "allowJs": true,
+	  
+	  "outDir": "dist",
+   
+	  "esModuleInterop": true,                          
+	  
+	  "forceConsistentCasingInFileNames": true,         
+							   
+	  "skipLibCheck": true                              
 	},
-	"include": ["src/**/*"],
-	"exclude": ["node_modules", "dist"],
-	"ts-node": {
-		"files": true
-	}
-}
+	"include": [
+	  "src/**/*.ts"]
+  }
 
 ```
 
